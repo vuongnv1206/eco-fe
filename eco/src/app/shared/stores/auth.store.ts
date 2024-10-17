@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap, firstValueFrom } from 'rxjs';
 import { JwtService } from '../services/jwt.service';
+import { AuthService } from '../services/auth.services';
 
 export interface User {
   id: string;
@@ -12,7 +13,7 @@ export interface User {
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class AuthStore {
   private userSubject = new BehaviorSubject<User | null>(null);
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
 
@@ -40,29 +41,31 @@ export class AuthService {
   }
 
   login(email: string, password: string): Promise<any> {
-    return this.authService
-      .login(email, password)
-      .then((response) => {
-        if (response.data.token) {
-          this.isAuthenticatedSubject.next(true);
-          const userParse = this.jwtService.parseToken(response.data.token);
-          const user: User = {
-            id: userParse['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
-            fullName: userParse.fullName,
-            emailaddress: userParse['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
-            phone: userParse['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone'],
-          };
-          this.userSubject.next(user);
-        } else {
-          this.isAuthenticatedSubject.next(false);
-          this.userSubject.next(null);
-        }
-        return Promise.resolve(response.data);
-      })
-      .catch((error) => {
-        this.isAuthenticatedSubject.next(false);
-        this.userSubject.next(null);
-        return Promise.reject(error);
-      });
+    return firstValueFrom(
+      this.authService.login(email, password).pipe(
+        tap((response: { data: { token: string } }) => {
+          if (response.data.token) {
+            this.isAuthenticatedSubject.next(true);
+            const userParse = this.jwtService.parseToken(response.data.token);
+            const user: User = {
+              id: userParse['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
+              fullName: userParse.fullName,
+              emailaddress: userParse['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
+              phone: userParse['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone'],
+            };
+            this.userSubject.next(user);
+          } else {
+            this.isAuthenticatedSubject.next(false);
+            this.userSubject.next(null);
+          }
+        })
+      )
+    )
+    .then(response => Promise.resolve(response.data))
+    .catch((error) => {
+      this.isAuthenticatedSubject.next(false);
+      this.userSubject.next(null);
+      return Promise.reject(error);
+    });
   }
 }

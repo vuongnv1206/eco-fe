@@ -8,10 +8,10 @@ const routes: Routes = [
     loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
     component: AppLayoutComponent
   },
-//   {
-//     path: 'auth',
-//     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
-//   },
+  {
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+  },
   // {
   //   path: 'catalog',
   //   loadChildren: () => import('./catalog/catalog.module').then(m => m.CatalogModule),
