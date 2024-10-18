@@ -3,12 +3,16 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppLayoutModule } from './layout/app.layout.module';
 import { AppRoutingModule } from './app.routes';
-import { HttpClient } from '@angular/common/http';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ImageModule } from 'primeng/image';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { NotificationService } from './shared/services/notification.service';
+import { UtilityService } from './shared/services/utility.service';
+import { DialogService } from 'primeng/dynamicdialog';
+import { environment } from '../environments/environment';
 @NgModule({
   declarations: [	
     AppComponent,
@@ -23,8 +27,16 @@ import { ImageModule } from 'primeng/image';
     FormsModule,
     ReactiveFormsModule,
     ImageModule,
+
   ],
-  providers: [],
+  providers: [
+    DialogService,
+    MessageService,
+    NotificationService,
+    ConfirmationService,
+    UtilityService,
+    
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

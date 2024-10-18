@@ -6,8 +6,11 @@ import { LOGIN_URL } from './shared/constants/url.const';
 
 @Component({
   selector: 'app-root',
-  template: '<router-outlet></router-outlet>',
-  // styleUrls: ['./app.component.scss']
+  template: `
+    <router-outlet></router-outlet>
+    <p-confirmDialog [style]="{ width: '50vw' }" header="Confirmation" rejectButtonStyleClass="p-button-outlined" acceptButtonStyleClass=""></p-confirmDialog>
+    <p-toast position="top-right"></p-toast>
+  `,
 })
 export class AppComponent {
   title = 'angular';

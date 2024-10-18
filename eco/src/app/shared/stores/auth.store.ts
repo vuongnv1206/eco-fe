@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, tap, firstValueFrom, catchError, throwError } from 'rxjs';
 import { JwtService } from '../services/jwt.service';
 import { AuthService } from '../services/auth.services';
 
@@ -60,36 +60,31 @@ export class AuthStore {
     }
   }
 
-  login(email: string, password: string): Promise<any> {
-    return firstValueFrom(
-      this.authService.login(email, password).pipe(
-        tap((response: { data: { token: string } }) => {
-          if (response.data.token) {
-            this.isAuthenticatedSubject.next(true);
-            const userParse = this.jwtService.parseToken(response.data.token);
-            const user: User = {
-              id: userParse['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
-              fullName: userParse.fullName,
-              emailaddress: userParse['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
-              phone: userParse['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone'],
-              permission: userParse.permission,
-            };
-            this.userSubject.next(user);
-          } else {
-            this.isAuthenticatedSubject.next(false);
-            this.userSubject.next(null);
-          }
-        })
-      )
-    )
-    .then(response => Promise.resolve(response.data))
-    .catch((error) => {
-      this.isAuthenticatedSubject.next(false);
-      this.userSubject.next(null);
-      return Promise.reject(error);
-    });
+  login(email: string, password: string): Observable<any> {
+    return this.authService.login(email, password).pipe(
+      tap((response: any) => { // Thay đổi kiểu dữ liệu cho response nếu cần
+        if (response.token) { // Sửa đổi thành response.token
+          this.isAuthenticatedSubject.next(true);
+          const userParse = this.jwtService.parseToken(response.token);
+          const user: User = {
+            id: userParse['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
+            fullName: userParse.fullName,
+            emailaddress: userParse['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
+            phone: userParse['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone'],
+          };
+          this.userSubject.next(user);
+        } else {
+          this.isAuthenticatedSubject.next(false);
+          this.userSubject.next(null);
+        }
+      }),
+      catchError((error) => {
+        this.isAuthenticatedSubject.next(false);
+        this.userSubject.next(null);
+        return throwError(() => error); // Ném lỗi để xử lý trong component
+      })
+    );
   }
-
   signOut(): void {
     // Cập nhật trạng thái của các BehaviorSubject
     this.isAuthenticatedSubject.next(false);

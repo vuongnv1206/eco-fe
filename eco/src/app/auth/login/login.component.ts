@@ -12,6 +12,7 @@ import { JwtService } from '../../shared/services/jwt.service';
 import { Subject, takeUntil } from 'rxjs';
 import { HOME_URL } from '../../shared/constants/url.const';
 import { AuthStore } from '../../shared/stores/auth.store';
+import { NotificationService } from '../../shared/services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -44,13 +45,14 @@ export class LoginComponent {
     private authStore: AuthStore,
     private router: Router,
     private jwtService: JwtService,
+    private notificationService: NotificationService
+
 ) {
     this.loginForm = this.fb.group({
       username: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
     });
   }
-
   login() {
     this.toggleBlockUI(true);
     var request: LoginModel = {
@@ -58,16 +60,16 @@ export class LoginComponent {
       password: this.loginForm.controls['password'].value,
     };
   
-    // Gọi AuthStore thay vì AuthService
-    this.authStore
-      .login(request.username, request.password)
-      .then(() => {
+    this.authStore.login(request.username, request.password).subscribe({
+      next: (response) => {
         this.toggleBlockUI(false);
-        this.router.navigate([HOME_URL]);
-      })
-      .catch((error) => {
+        this.router.navigate([HOME_URL]); // Điều hướng đến trang chính
+      },
+      error: (error) => {
         this.toggleBlockUI(false);
-      });
+        this.notificationService.showError('Đăng nhập không đúng.'); // Hiển thị thông báo lỗi
+      },
+    });
   }
   
   private toggleBlockUI(enabled: boolean) {
