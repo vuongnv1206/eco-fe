@@ -2,8 +2,8 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from "./service/app.layout.service";
 import { Router } from '@angular/router';
-import { AuthService } from '../shared/services/auth.services';
 import { LOGIN_URL } from '../shared/constants/url.const';
+import { AuthStore } from '../shared/stores/auth.store';
 
 @Component({
     selector: 'app-topbar',
@@ -20,7 +20,7 @@ export class AppTopBarComponent {
     @ViewChild('topbarmenu') menu!: ElementRef;
 
     constructor(public layoutService: LayoutService,
-        private authService : AuthService,
+        private authStore : AuthStore,
         private router: Router
         ) { }
   
@@ -54,7 +54,7 @@ export class AppTopBarComponent {
             label: 'Logout',
             icon: 'pi pi-sign-out',
             command: event => {
-              this.authService.signOut();
+              this.authStore.signOut();
               this.router.navigate([LOGIN_URL]);
             }
         }

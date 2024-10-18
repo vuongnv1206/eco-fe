@@ -58,6 +58,9 @@ export class JwtService {
     const user = window.localStorage.getItem(this.USER);
     return user ? JSON.parse(user) : null;
   }
+  destroyUser() {
+    window.localStorage.removeItem(this.USER)
+  }
 
   // Lấy header Authorization cho API request
   getAuthHeader(): string {

@@ -16,7 +16,7 @@ export class AuthService {
       ) {}
 
   login(email: string, password: string): Observable<any> {
-    return this.apiService.post('/tokens', { email, password }).pipe(
+    return this.apiService.post('/tokens/get', { email, password }).pipe(
       map((response: any) => {
         // Kiểm tra và lưu token nếu response có chứa token
         if (response.token) {
@@ -32,11 +32,5 @@ export class AuthService {
     );
   }
 
-  signOut(): void {
-    // Xóa token và thông tin người dùng
-    this.jwtService.destroyToken();
 
-    // Điều hướng đến trang đăng nhập (hoặc trang chủ tùy bạn)
-    this.router.navigate(['/login']);
-  }
 }

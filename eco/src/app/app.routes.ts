@@ -16,6 +16,8 @@ const routes: Routes = [
   //   path: 'catalog',
   //   loadChildren: () => import('./catalog/catalog.module').then(m => m.CatalogModule),
   //   component: AppLayoutComponent
+  // canActivate: [AuthGuard], // Sử dụng AuthGuard để bảo vệ route
+  //   data: { permission: 'Catalog.View' }, // Kiểm tra quyền truy cập cho route này
   // },
   // {
   //   path: 'system',

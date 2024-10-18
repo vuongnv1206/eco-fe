@@ -7,7 +7,7 @@ import { JwtService } from './jwt.service';
   providedIn: 'root',
 })
 export class ApiService {
-  private api_url = 'http://localhost:5000/api';
+  private api_url = 'https://localhost:5001/api';
 
    // Inject HttpClient và JwtService qua constructor
    constructor(private http: HttpClient, private jwtService: JwtService) {}
