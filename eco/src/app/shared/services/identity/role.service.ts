@@ -7,7 +7,7 @@ import { ApiService } from '../api.service';
   providedIn: 'root',
 })
 export class RoleService {
-  private basePath = '/roles'; // Đường dẫn cơ sở cho các API của vai trò
+  private basePath = '/role'; // Đường dẫn cơ sở cho các API của vai trò
 
   constructor(private apiService: ApiService) {}
 
@@ -38,6 +38,6 @@ export class RoleService {
 
   // Xóa vai trò
   deleteAsync(id: string): Observable<string> {
-    return this.apiService.delete<string>(`${this.basePath}/role/${id}`);
+    return this.apiService.delete<string>(`${this.basePath}/${id}`);
   }
 }

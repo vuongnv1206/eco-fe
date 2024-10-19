@@ -28,10 +28,15 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { RoleComponent } from './role/role.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SystemRoutingModule } from './system-routing.module';
+import { RoleDetailComponent } from './role/role-detail/role-detail.component';
+import { ValidationMessageComponent } from '../shared/modules/validation-message/validation-message.component';
 
 @NgModule({
   declarations: [
     RoleComponent,
+    RoleDetailComponent,
+    ValidationMessageComponent
+
   ],
   imports: [
     CommonModule,
