@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AppLayoutComponent } from './layout/app.layout.component';
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
@@ -19,11 +19,12 @@ const routes: Routes = [
   // canActivate: [AuthGuard], // Sử dụng AuthGuard để bảo vệ route
   //   data: { permission: 'Catalog.View' }, // Kiểm tra quyền truy cập cho route này
   // },
-  // {
-  //   path: 'system',
-  //   loadChildren: () => import('./system/system.module').then(m => m.SystemModule),
-  //   component: AppLayoutComponent
-  // },
+   {
+    path: 'system',
+    loadChildren: () => import('./system/system.module').then(m => m.SystemModule),
+    component: AppLayoutComponent
+  },
+  { path: '**', redirectTo: '' } 
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

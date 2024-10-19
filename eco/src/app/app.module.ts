@@ -13,6 +13,7 @@ import { NotificationService } from './shared/services/notification.service';
 import { UtilityService } from './shared/services/utility.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { environment } from '../environments/environment';
+import { SystemModule } from './system/system.module';
 @NgModule({
   declarations: [	
     AppComponent,
@@ -27,7 +28,7 @@ import { environment } from '../environments/environment';
     FormsModule,
     ReactiveFormsModule,
     ImageModule,
-
+    SystemModule,
   ],
   providers: [
     DialogService,

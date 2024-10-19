@@ -24,7 +24,7 @@ export class AppComponent {
   ngOnInit(): void {
     this.primeNgConfig.ripple = true;
     document.documentElement.style.fontSize = '14px';
-    if(this.authStore.isAuthenticated()){
+    if(!this.authStore.isAuthenticated()){
       this.router.navigate([LOGIN_URL]);
     }
   }

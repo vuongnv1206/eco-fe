@@ -11,6 +11,10 @@ export class RoleStore {
 
   constructor(private roleService: RoleService) {}
 
+  getRoles(): Observable<RoleDto[]> {
+    return this.roleService.getListAsync();
+  }
+
   getRoleById(id: string): Observable<RoleDto> {
     return this.roleService.getByIdAsync(id); // Sửa tên phương thức cho khớp với RoleService
   }
