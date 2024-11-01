@@ -13,6 +13,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { HOME_URL } from '../../shared/constants/url.const';
 import { AuthStore } from '../../shared/stores/auth.store';
 import { NotificationService } from '../../shared/services/notification.service';
+import { AuthService } from '../../shared/services/auth.services';
 
 @Component({
   selector: 'app-login',
@@ -45,7 +46,8 @@ export class LoginComponent {
     private authStore: AuthStore,
     private router: Router,
     private jwtService: JwtService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private authService: AuthService
 
 ) {
     this.loginForm = this.fb.group({
@@ -53,6 +55,11 @@ export class LoginComponent {
       password: new FormControl('', Validators.required),
     });
   }
+
+  externalLogin = () => {
+    this.authService.signInWithGoogle();
+  }
+
   login() {
     this.toggleBlockUI(true);
     var request: LoginModel = {

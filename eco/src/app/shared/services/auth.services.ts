@@ -1,19 +1,33 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { JwtService } from './jwt.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
+
+import { SocialAuthService, SocialUser } from "@abacritt/angularx-social-login";
+import { GoogleLoginProvider } from "@abacritt/angularx-social-login";
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+
+  private extAuthChangeSub = new Subject<SocialUser>();
+  private authChangeSub = new Subject<boolean>();
+  public authChanged = this.authChangeSub.asObservable();
+  public extAuthChanged = this.extAuthChangeSub.asObservable();
   
     constructor(
         private apiService: ApiService,
         private jwtService: JwtService,
-        private router: Router // Inject Router để điều hướng nếu cần
-      ) {}
+        private router: Router, // Inject Router để điều hướng nếu cần
+        private externalAuthService: SocialAuthService
+      ) {
+        this.externalAuthService.authState.subscribe((user) => {
+          console.log(user)
+          this.extAuthChangeSub.next(user);
+        })
+      }
 
   login(email: string, password: string): Observable<any> {
     return this.apiService.post('/tokens/get', { email, password }).pipe(
@@ -32,5 +46,8 @@ export class AuthService {
     );
   }
 
+  public signInWithGoogle = ()=> {
+    this.externalAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
+  }
 
 }

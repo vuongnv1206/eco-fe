@@ -9,6 +9,8 @@ import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { DividerModule } from 'primeng/divider';
+import { GoogleSigninButtonModule, SocialLoginModule } from '@abacritt/angularx-social-login';
 
 @NgModule({
     imports: [
@@ -22,7 +24,10 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         ReactiveFormsModule,
         BlockUIModule,
         ProgressSpinnerModule,
+        DividerModule,
+        GoogleSigninButtonModule,
+        SocialLoginModule,
     ],
-    declarations: [LoginComponent]
+    declarations: [LoginComponent],
 })
 export class LoginModule { }
