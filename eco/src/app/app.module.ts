@@ -14,10 +14,13 @@ import { UtilityService } from './shared/services/utility.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { environment } from '../environments/environment';
 import { SystemModule } from './system/system.module';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { ErrorHandlerService } from './shared/services/error-handler.service';
 @NgModule({
-  declarations: [	
+  declarations: [
     AppComponent,
-   ],
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -36,7 +39,32 @@ import { SystemModule } from './system/system.module';
     NotificationService,
     ConfirmationService,
     UtilityService,
-    
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '1023196294291-shhj66sk824th978fd2eqcfd1omnf0or.apps.googleusercontent.com', {
+              scopes: ['email']
+            }
+            )
+          },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider(
+              "513301611588410"
+              )
+          }
+        ],
+        debug: true,
+        onError: (err) => {
+          console.error(err);
+        }
+      } as SocialAuthServiceConfig
+    }
   ],
   bootstrap: [AppComponent]
 })
