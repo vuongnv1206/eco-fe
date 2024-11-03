@@ -30,11 +30,13 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SystemRoutingModule } from './system-routing.module';
 import { RoleDetailComponent } from './role/role-detail/role-detail.component';
 import { ValidationMessageComponent } from '../shared/modules/validation-message/validation-message.component';
+import { PermissionGrantComponent } from './role/permission-grant/permission-grant.component';
 
 @NgModule({
   declarations: [
     RoleComponent,
     RoleDetailComponent,
+    PermissionGrantComponent,
     ValidationMessageComponent
 
   ],

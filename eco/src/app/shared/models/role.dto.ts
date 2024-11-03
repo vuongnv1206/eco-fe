@@ -16,3 +16,14 @@ export interface RoleDto {
     permissions: string[]; 
   }
   
+  export interface RolePermissionDto {
+    roleId?: string | undefined;
+    permissions?: PermissionDto[] | undefined;
+}
+
+  export interface PermissionDto {
+    type?: string | undefined;
+    value?: string | undefined;
+    displayName?: string | undefined;
+    selected?: boolean;
+}

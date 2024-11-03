@@ -8,6 +8,7 @@ import { NotificationService } from '../../shared/services/notification.service'
 import { ConfirmationService } from 'primeng/api';
 import { MessageConstants } from '../../shared/constants/message.const';
 import { RoleDetailComponent } from './role-detail/role-detail.component';
+import { PermissionGrantComponent } from './permission-grant/permission-grant.component';
 
 @Component({
   selector: 'app-role',
@@ -84,6 +85,25 @@ export class RoleComponent implements OnInit, OnDestroy {
         id: id,
       },
       header: 'Cập nhật quyền',
+      width: '70%',
+    });
+
+    ref.onClose.subscribe((data: RoleDto) => {
+      if (data) {
+        this.notificationService.showSuccess(MessageConstants.UPDATED_OK_MSG);
+        this.selectedItems = [];
+        this.loadData(data.id);
+      }
+    });
+  }
+
+  showPermissionModal(id: string, name: string) {
+    const ref = this.dialogService.open(PermissionGrantComponent, {
+      data: {
+        id: id,
+        name: name,
+      },
+      header: name,
       width: '70%',
     });
 

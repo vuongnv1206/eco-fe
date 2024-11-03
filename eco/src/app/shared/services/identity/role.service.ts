@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RoleDto, CreateOrUpdateRoleRequest, UpdateRolePermissionsRequest } from '../../models/role.dto';
+import { RoleDto, CreateOrUpdateRoleRequest, UpdateRolePermissionsRequest, RolePermissionDto } from '../../models/role.dto';
 import { ApiService } from '../api.service';
 
 @Injectable({
@@ -22,8 +22,8 @@ export class RoleService {
   }
 
   // Lấy thông tin chi tiết vai trò với quyền theo ID
-  getByIdWithPermissionsAsync(id: string): Observable<RoleDto> {
-    return this.apiService.get<RoleDto>(`${this.basePath}/${id}/permissions`);
+  getByIdWithPermissionsAsync(id: string): Observable<RolePermissionDto> {
+    return this.apiService.get<RolePermissionDto>(`${this.basePath}/${id}/permissions`);
   }
 
   // Cập nhật quyền cho vai trò

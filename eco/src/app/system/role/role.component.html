@@ -42,7 +42,7 @@
           <td>{{ row.name }}</td>
           <td>{{ row.description }}</td>
           <td>
-            <button pButton>Phân quyền</button>
+            <button pButton (click)="showPermissionModal(row.id, row.name)">Phân quyền</button>
           </td>
         </tr>
       </ng-template>

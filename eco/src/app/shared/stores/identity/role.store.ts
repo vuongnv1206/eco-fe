@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { RoleService } from '../../services/identity/role.service';
-import { CreateOrUpdateRoleRequest, RoleDto, UpdateRolePermissionsRequest } from '../../models/role.dto';
+import { CreateOrUpdateRoleRequest, RoleDto, RolePermissionDto, UpdateRolePermissionsRequest } from '../../models/role.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +19,7 @@ export class RoleStore {
     return this.roleService.getByIdAsync(id); // Sửa tên phương thức cho khớp với RoleService
   }
 
-  getRoleWithPermissions(id: string): Observable<RoleDto> {
+  getRoleWithPermissions(id: string): Observable<RolePermissionDto> {
     return this.roleService.getByIdWithPermissionsAsync(id); // Sửa tên phương thức cho khớp
   }
 
