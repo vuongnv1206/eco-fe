@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap, firstValueFrom, catchError, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, tap, firstValueFrom, catchError, throwError, from, Subject } from 'rxjs';
 import { JwtService } from '../services/jwt.service';
 import { AuthService } from '../services/auth.services';
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 
 export interface User {
   id: string;
@@ -37,7 +38,37 @@ export class AuthStore {
   private userSubject = new BehaviorSubject<User | null>(null);
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
 
-  constructor(private authService: AuthService, private jwtService: JwtService) {}
+  constructor(
+    private authService: AuthService, 
+    private jwtService: JwtService,
+    
+  ) {}
+
+  o2authWithGoogle(idToken: string) : Observable<any> {
+    return from(this.authService.signInWithGoogle(idToken)).pipe(
+      tap((response: any) => {
+        if (response.token) { 
+          this.isAuthenticatedSubject.next(true);
+          const userParse = this.jwtService.parseToken(response.token);
+          const user: User = {
+            id: userParse['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
+            fullName: userParse.fullName,
+            emailaddress: userParse['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
+            phone: userParse['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone'],
+          };
+          this.userSubject.next(user);
+        } else {
+          this.isAuthenticatedSubject.next(false);
+          this.userSubject.next(null);
+        }
+      }),
+      catchError((error) => {
+        this.isAuthenticatedSubject.next(false);
+        this.userSubject.next(null);
+        return throwError(() => error); // Ném lỗi để xử lý trong component
+      })
+    )
+  }
 
   // Lấy Observable của user
   getUser(): Observable<User | null> {

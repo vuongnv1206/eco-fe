@@ -14,6 +14,7 @@ import { HOME_URL } from '../../shared/constants/url.const';
 import { AuthStore } from '../../shared/stores/auth.store';
 import { NotificationService } from '../../shared/services/notification.service';
 import { AuthService } from '../../shared/services/auth.services';
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 
 @Component({
   selector: 'app-login',
@@ -39,6 +40,7 @@ export class LoginComponent {
   public blockedPanel: boolean = false;
 
   private ngUnsubscribe = new Subject<void>();
+  private extAuthChangeSub = new Subject<SocialUser>();
 
   constructor(
     public layoutService: LayoutService,
@@ -47,17 +49,35 @@ export class LoginComponent {
     private router: Router,
     private jwtService: JwtService,
     private notificationService: NotificationService,
-    private authService: AuthService
-
-) {
+    private externalAuthService: SocialAuthService,
+  ) {
     this.loginForm = this.fb.group({
       username: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
     });
+
+    this.externalAuthService.authState.subscribe((user) => {
+      this.extAuthChangeSub.next(user);
+      if (user) {
+        this.externalLoginGoogle(user.idToken)
+      }
+    })
   }
 
-  externalLogin = () => {
-    this.authService.signInWithGoogle();
+  externalLoginGoogle (idToken: string) {
+    this.authStore.o2authWithGoogle(idToken).subscribe({
+      next: (response) => {
+        this.toggleBlockUI(false);
+        this.router.navigate([HOME_URL]); // Điều hướng đến trang chính
+      },
+      error: (error) => {
+        this.toggleBlockUI(false);
+        this.notificationService.showError('Đăng nhập không đúng.'); // Hiển thị thông báo lỗi
+      },
+    });
+  }
+
+  externalLoginFacebook = () => {
   }
 
   login() {
@@ -66,7 +86,7 @@ export class LoginComponent {
       username: this.loginForm.controls['username'].value,
       password: this.loginForm.controls['password'].value,
     };
-  
+
     this.authStore.login(request.username, request.password).subscribe({
       next: (response) => {
         this.toggleBlockUI(false);
@@ -78,7 +98,7 @@ export class LoginComponent {
       },
     });
   }
-  
+
   private toggleBlockUI(enabled: boolean) {
     if (enabled == true) {
       this.blockedPanel = true;

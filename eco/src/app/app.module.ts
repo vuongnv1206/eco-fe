@@ -15,7 +15,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { environment } from '../environments/environment';
 import { SystemModule } from './system/system.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { GoogleLoginProvider, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { ErrorHandlerService } from './shared/services/error-handler.service';
 @NgModule({
   declarations: [
@@ -40,11 +40,6 @@ import { ErrorHandlerService } from './shared/services/error-handler.service';
     ConfirmationService,
     UtilityService,
     {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ErrorHandlerService,
-      multi: true
-    },
-    {
       provide: 'SocialAuthServiceConfig',
       useValue: {
         autoLogin: false,
@@ -57,7 +52,14 @@ import { ErrorHandlerService } from './shared/services/error-handler.service';
             }
             )
           },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider(
+              "513301611588410"
+              )
+          }
         ],
+        debug: true,
         onError: (err) => {
           console.error(err);
         }
